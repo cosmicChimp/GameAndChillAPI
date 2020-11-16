@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using API.Data;
+using API.Dtos;
+using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -16,10 +18,12 @@ namespace API.Controllers
     public class UsersController : ControllerBase
     {
         private readonly IGamingRepository _repo;
+        private readonly IMapper _mapper;
 
-        public UsersController(IGamingRepository repo)
+        public UsersController(IGamingRepository repo, IMapper mapper)
         {
             _repo = repo;
+            _mapper = mapper;
         }
         // GET: api/<UsersController>
         [HttpGet]
@@ -27,7 +31,9 @@ namespace API.Controllers
         {
             var users = await _repo.GetUsers();
 
-            return Ok(users);
+            var usersToReturn = _mapper.Map<IEnumerable<UserForListDto>>(users);
+
+            return Ok(usersToReturn);
         }
 
         // GET api/<UsersController>/5
@@ -35,8 +41,9 @@ namespace API.Controllers
         public async Task<IActionResult> GetUser(int id)
         {
             var user = await _repo.GetUser(id);
+            var userToReturn = _mapper.Map<UserForDetailedDto>(user);
 
-            return Ok(user);
+            return Ok(userToReturn);
         }
 
         // POST api/<UsersController>

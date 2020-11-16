@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using API.Data;
 using API.Helpers;
+using AutoMapper;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics;
@@ -40,6 +41,7 @@ namespace API
                 Newtonsoft.Json.ReferenceLoopHandling.Ignore;
             });
             services.AddCors();
+            services.AddAutoMapper(typeof(GamingRepository).Assembly);
             services.AddScoped<IAuthRepository, AuthRepository>();
             services.AddScoped<IGamingRepository, GamingRepository>();
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
